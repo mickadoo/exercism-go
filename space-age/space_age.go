@@ -1,39 +1,38 @@
-/**
-* Space package computes info on how things might be in space
-*/
+// Package space computes info on how things might be in space
 package space
 
+// Planet is an alias for string to allow some specialized methods
 type Planet string
 
 const (
-	Earth Planet = "Earth"
-	Mercury Planet = "Mercury"
-	Venus Planet = "Venus"
-	Mars Planet = "Mars"
-	Jupiter Planet = "Jupiter"
-	Saturn Planet = "Saturn"
-	Uranus Planet = "Uranus"
-	Neptune Planet = "Neptune"
+	earth   Planet = "Earth"
+	mercury Planet = "Mercury"
+	venus   Planet = "Venus"
+	mars    Planet = "Mars"
+	jupiter Planet = "Jupiter"
+	saturn  Planet = "Saturn"
+	uranus  Planet = "Uranus"
+	neptune Planet = "Neptune"
 )
 
 // getOrbitalPeriod gets the number of earth years it takes this planet to orbit the sun
 func (planet Planet) getOrbitalPeriod() float64 {
 	switch planet {
-	case Earth:
+	case earth:
 		return 1
-	case Mercury:
+	case mercury:
 		return 0.2408467
-	case Venus:
+	case venus:
 		return 0.61519726
-	case Mars:
+	case mars:
 		return 1.8808158
-	case Jupiter:
+	case jupiter:
 		return 11.862615
-	case Saturn:
+	case saturn:
 		return 29.447498
-	case Uranus:
+	case uranus:
 		return 84.016846
-	case Neptune:
+	case neptune:
 		return 164.79132
 	}
 
