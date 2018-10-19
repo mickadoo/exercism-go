@@ -3,35 +3,27 @@ package bob
 
 import (
 	"strings"
+	"unicode"
 )
-
-func endsWith(str string, char rune) bool {
-	length := len(str)
-	if length == 0 {
-		return false
-	}
-	return rune(str[length-1]) == char
-}
 
 // Hey responds to text input with a comment
 func Hey(remark string) string {
 	var isQuestion, isUpper bool
 
-	// trim whitespace characters
-	remark = strings.Trim(remark, " \t\r\n")
+	remark = strings.TrimSpace(remark)
 
-	isQuestion = endsWith(remark, '?')
-	isAlpha := strings.ContainsAny(strings.ToLower(remark), "abcdefghijklmnopqrstuvwxyz")
+	isQuestion = strings.HasSuffix(remark, "?")
+	isAlpha := strings.IndexFunc(remark, unicode.IsLetter) >= 0
 	isUpper = remark == strings.ToUpper(remark) && isAlpha
 
-	switch true {
+	switch {
 	case remark == "":
 		return "Fine. Be that way!"
 	case isQuestion && !isUpper:
 		return "Sure."
-	case isQuestion && isUpper:
+	case isQuestion:
 		return "Calm down, I know what I'm doing!"
-	case isUpper && !isQuestion:
+	case isUpper:
 		return "Whoa, chill out!"
 	default:
 		return "Whatever."
