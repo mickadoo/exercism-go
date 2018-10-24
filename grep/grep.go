@@ -31,8 +31,8 @@ func isFlagEnabled(name string) bool {
 // Search finds a matching patterns in a list of given files
 func Search(pattern string, flagList []string, fileNames []string) []string {
 	flags = flagList
-	var matches = make([]string, 0)
-	var isMultiple = len(fileNames) > 1
+	matches := make([]string, 0)
+	isMultiple := len(fileNames) > 1
 
 	for _, fileName := range fileNames {
 		file := openFile(fileName)
@@ -59,7 +59,7 @@ func Search(pattern string, flagList []string, fileNames []string) []string {
 }
 
 func hasMatch(line string, pattern string) bool {
-	var hasMatch = false
+	hasMatch := false
 
 	if isFlagEnabled(flagCaseInsensitive) {
 		line = strings.ToLower(line)
