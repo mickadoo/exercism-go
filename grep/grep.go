@@ -16,12 +16,10 @@ const (
 	flagInvert          = "-v" // Invert the program -- collect all lines that fail to match the pattern.
 )
 
-type flagSettings []string
+var flags []string
 
-var flags flagSettings
-
-func (f flagSettings) isEnabled(name string) bool {
-	for _, flag := range f {
+func isFlagEnabled(name string) bool {
+	for _, flag := range flags {
 		if flag == name {
 			return true
 		}
@@ -32,65 +30,66 @@ func (f flagSettings) isEnabled(name string) bool {
 
 // Search finds a matching patterns in a list of given files
 func Search(pattern string, flagList []string, fileNames []string) []string {
+	flags = flagList
 	var matches = make([]string, 0)
-	var flags = flagSettings(flagList)
 	var isMultiple = len(fileNames) > 1
 
 	for _, fileName := range fileNames {
 		file := openFile(fileName)
-		defer file.Close()
-
 		scanner := bufio.NewScanner(file)
 		lineNum := 1
+
 		for scanner.Scan() {
 			line := scanner.Text()
-			if hasMatch(line, pattern, flags) {
-				matches = append(matches, formatMatch(line, lineNum, fileName, flags, isMultiple))
+			if hasMatch(line, pattern) {
+				newMatch := formatMatch(line, lineNum, fileName, isMultiple)
+				matches = append(matches, newMatch)
 
 				// we can stop checking file here if we only care about the filename
-				if flags.isEnabled(flagFileNameOnly) {
+				if isFlagEnabled(flagFileNameOnly) {
 					break
 				}
 			}
 			lineNum++
 		}
+		file.Close()
 	}
 
 	return matches
 }
 
-func hasMatch(line string, pattern string, flags flagSettings) bool {
+func hasMatch(line string, pattern string) bool {
 	var hasMatch = false
 
-	if flags.isEnabled(flagCaseInsensitive) {
+	if isFlagEnabled(flagCaseInsensitive) {
 		line = strings.ToLower(line)
 		pattern = strings.ToLower(pattern)
 	}
 
-	if flags.isEnabled(flagFullLinesOnly) {
+	if isFlagEnabled(flagFullLinesOnly) {
 		hasMatch = line == pattern
 	} else {
 		hasMatch = strings.Contains(line, pattern)
 	}
 
-	if flags.isEnabled(flagInvert) {
+	if isFlagEnabled(flagInvert) {
 		return !hasMatch
 	}
 
 	return hasMatch
 }
 
-func formatMatch(line string, lineNum int, fileName string, flags flagSettings, isMultiple bool) string {
-	if flags.isEnabled(flagLineNum) {
+func formatMatch(line string, lineNum int, fileName string, isMultiple bool) string {
+	if isFlagEnabled(flagFileNameOnly) {
+		return fileName
+	}
+
+	if isFlagEnabled(flagLineNum) {
 		line = fmt.Sprintf("%d:%s", lineNum, line)
 	}
 
 	if isMultiple {
 		line = fmt.Sprintf("%s:%s", fileName, line)
-	}
-
-	if flags.isEnabled(flagFileNameOnly) {
-		line = fileName
 	}
 
 	return line
