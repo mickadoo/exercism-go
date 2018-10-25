@@ -16,6 +16,7 @@ const (
 	flagInvert          = "-v" // Invert the program -- collect all lines that fail to match the pattern.
 )
 
+// This is at package leve since it's used in most functions
 var flags []string
 
 // Search finds a matching patterns in a list of given files
@@ -36,7 +37,7 @@ func Search(pattern string, flagList []string, fileNames []string) []string {
 				newMatch := formatMatch(line, lineNum, fileName, isMultiple)
 				matches = append(matches, newMatch)
 
-				// we can stop checking file here if we only care about the filename
+				// We can stop checking file here if we only care about the filename
 				if isFlagEnabled(flagFileNameOnly) {
 					break
 				}
@@ -61,6 +62,7 @@ func isFlagEnabled(name string) bool {
 
 func compileRegex(pattern string) *regexp.Regexp {
 	if isFlagEnabled(flagCaseInsensitive) {
+		// Prefixing a pattern with this makes it case insensitve
 		pattern = "(?i)" + pattern
 	}
 
@@ -85,10 +87,12 @@ func formatMatch(line string, lineNum int, fileName string, isMultiple bool) str
 	}
 
 	if isFlagEnabled(flagLineNum) {
+		// Add the line number
 		line = fmt.Sprintf("%d:%s", lineNum, line)
 	}
 
 	if isMultiple {
+		// For multiple files add the filename
 		line = fileName + ":" + line
 	}
 
