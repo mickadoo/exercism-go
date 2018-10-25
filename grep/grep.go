@@ -72,15 +72,11 @@ func compileRegex(pattern string) *regexp.Regexp {
 }
 
 func hasMatch(line string, pattern *regexp.Regexp) bool {
-	hasMatch := false
-
-	hasMatch = pattern.MatchString(line)
-
 	if isFlagEnabled(flagInvert) {
-		return !hasMatch
+		return !pattern.MatchString(line)
 	}
 
-	return hasMatch
+	return pattern.MatchString(line)
 }
 
 func formatMatch(line string, lineNum int, fileName string, isMultiple bool) string {
@@ -93,7 +89,7 @@ func formatMatch(line string, lineNum int, fileName string, isMultiple bool) str
 	}
 
 	if isMultiple {
-		line = fmt.Sprintf("%s:%s", fileName, line)
+		line = fileName + ":" + line
 	}
 
 	return line
