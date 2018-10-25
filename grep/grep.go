@@ -5,7 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
+	"regexp"
 )
 
 const (
@@ -18,21 +18,12 @@ const (
 
 var flags []string
 
-func isFlagEnabled(name string) bool {
-	for _, flag := range flags {
-		if flag == name {
-			return true
-		}
-	}
-
-	return false
-}
-
 // Search finds a matching patterns in a list of given files
 func Search(pattern string, flagList []string, fileNames []string) []string {
 	flags = flagList
 	matches := make([]string, 0)
 	isMultiple := len(fileNames) > 1
+	regex := compileRegex(pattern)
 
 	for _, fileName := range fileNames {
 		file := openFile(fileName)
@@ -41,7 +32,7 @@ func Search(pattern string, flagList []string, fileNames []string) []string {
 
 		for scanner.Scan() {
 			line := scanner.Text()
-			if hasMatch(line, pattern) {
+			if hasMatch(line, regex) {
 				newMatch := formatMatch(line, lineNum, fileName, isMultiple)
 				matches = append(matches, newMatch)
 
@@ -58,19 +49,32 @@ func Search(pattern string, flagList []string, fileNames []string) []string {
 	return matches
 }
 
-func hasMatch(line string, pattern string) bool {
-	hasMatch := false
+func isFlagEnabled(name string) bool {
+	for _, flag := range flags {
+		if flag == name {
+			return true
+		}
+	}
 
+	return false
+}
+
+func compileRegex(pattern string) *regexp.Regexp {
 	if isFlagEnabled(flagCaseInsensitive) {
-		line = strings.ToLower(line)
-		pattern = strings.ToLower(pattern)
+		pattern = "(?i)" + pattern
 	}
 
 	if isFlagEnabled(flagFullLinesOnly) {
-		hasMatch = line == pattern
-	} else {
-		hasMatch = strings.Contains(line, pattern)
+		pattern = "^" + pattern + "$"
 	}
+
+	return regexp.MustCompile(pattern)
+}
+
+func hasMatch(line string, pattern *regexp.Regexp) bool {
+	hasMatch := false
+
+	hasMatch = pattern.MatchString(line)
 
 	if isFlagEnabled(flagInvert) {
 		return !hasMatch
