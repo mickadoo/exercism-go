@@ -9,11 +9,7 @@ func CollatzConjecture(num int) (int, error) {
 	}
 
 	steps := 0
-	for {
-		if num == 1 {
-			return steps, nil
-		}
-
+	for num != 1 {
 		if num%2 == 0 {
 			num = num / 2
 		} else {
@@ -21,4 +17,5 @@ func CollatzConjecture(num int) (int, error) {
 		}
 		steps++
 	}
+	return steps, nil
 }
