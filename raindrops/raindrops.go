@@ -11,7 +11,7 @@ func Convert(num int) string {
 	hasFactor := false
 
 	if num%3 == 0 {
-		result += "Pling"
+		result = "Pling"
 		hasFactor = true
 	}
 
