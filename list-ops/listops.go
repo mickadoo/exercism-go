@@ -9,7 +9,7 @@ type unaryFunc func(int) int
 // Foldr for args [x1, x2, ..., xn] returns f(x1, f(x2, ..., f(xn, init)...))
 func (l IntList) Foldr(function binFunc, initial int) int {
 	current := initial
-	for i := len(l) - 1; i >= 0; i-- {
+	for i := l.Length() - 1; i >= 0; i-- {
 		current = function(l[i], current)
 	}
 
@@ -32,7 +32,7 @@ func (l IntList) Filter(function predFunc) IntList {
 
 	for _, val := range l {
 		if function(val) {
-			result = append(result, val)
+			result = result.Append([]int{val})
 		}
 	}
 
@@ -60,9 +60,9 @@ func (l IntList) Map(function unaryFunc) IntList {
 
 // Reverse reverses a list
 func (l IntList) Reverse() IntList {
-	for i := 0; i < len(l)/2; i++ {
+	for i := 0; i < l.Length()/2; i++ {
 		tmp := l[i]
-		oppositeIndex := len(l) - i - 1
+		oppositeIndex := l.Length() - i - 1
 		l[i] = l[oppositeIndex]
 		l[oppositeIndex] = tmp
 	}
@@ -72,7 +72,7 @@ func (l IntList) Reverse() IntList {
 
 // Append add an element to a list.
 func (l IntList) Append(toAdd IntList) IntList {
-	combined := make(IntList, len(l)+len(toAdd))
+	combined := make(IntList, l.Length()+toAdd.Length())
 	i := 0
 	for _, val := range l {
 		combined[i] = val
