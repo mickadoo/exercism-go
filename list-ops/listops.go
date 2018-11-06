@@ -1,5 +1,6 @@
 package listops
 
+// IntList is a list of integers
 type IntList []int
 type binFunc func(int, int) int
 type predFunc func(int) bool
@@ -38,22 +39,58 @@ func (l IntList) Filter(function predFunc) IntList {
 	return result
 }
 
-func (list *IntList) Length() int {
-	return 0
+// Length gets the length of the list. Not sure if I'm allowed use len() here
+func (l IntList) Length() int {
+	len := 0
+	for range l {
+		len++
+	}
+
+	return len
 }
 
-func (list *IntList) Map(function unaryFunc) int {
-	return 0
+// Map applies a function on all members of a list
+func (l IntList) Map(function unaryFunc) IntList {
+	for index, val := range l {
+		l[index] = function(val)
+	}
+
+	return l
 }
 
-func (list *IntList) Reverse() int {
-	return 1
+// Reverse reverses a list
+func (l IntList) Reverse() IntList {
+	for i := 0; i < len(l)/2; i++ {
+		tmp := l[i]
+		oppositeIndex := len(l) - i - 1
+		l[i] = l[oppositeIndex]
+		l[oppositeIndex] = tmp
+	}
+
+	return l
 }
 
-func (list *IntList) Append(append IntList) int {
-	return 1
+// Append add an element to a list.
+func (l IntList) Append(toAdd IntList) IntList {
+	combined := make(IntList, len(l)+len(toAdd))
+	i := 0
+	for _, val := range l {
+		combined[i] = val
+		i++
+	}
+	for _, val := range toAdd {
+		combined[i] = val
+		i++
+	}
+
+	return combined
 }
 
-func (list *IntList) Concat(concat []IntList) int {
-	return 1
+// Concat takes a slice of integer lists and adds all elements from them to this list
+func (l IntList) Concat(concat []IntList) IntList {
+	for _, nextList := range concat {
+		l = l.Append(nextList)
+	}
+
+	return l
 }
