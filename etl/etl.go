@@ -7,7 +7,7 @@ import (
 
 // Transform takes old scoring data and transforms it to the new format
 func Transform(oldSystem map[int][]string) map[string]int {
-	newSystem := make(map[string]int, 26)
+	newSystem := make(map[string]int)
 
 	for score, letters := range oldSystem {
 		for _, letter := range letters {
