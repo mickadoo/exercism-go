@@ -19,7 +19,7 @@ var numeralsByLevel = [][]string{
 // ToRomanNumeral takes an number and returns the roman numeral equivalent
 func ToRomanNumeral(num int) (string, error) {
 	if num < 1 || num > 3000 {
-		return "", errors.New("Number must be between 1 and 300")
+		return "", errors.New("Number must be between 1 and 3000")
 	}
 
 	result := ""
