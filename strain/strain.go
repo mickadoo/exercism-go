@@ -24,14 +24,9 @@ func (ints Ints) Keep(predicate func(int) bool) Ints {
 
 // Discard returns a list of all members of the list that do not satisfy the predicate
 func (ints Ints) Discard(predicate func(int) bool) Ints {
-	var result Ints
-	for _, val := range ints {
-		if !predicate(val) {
-			result = append(result, val)
-		}
-	}
-
-	return result
+	return ints.Keep(func(i int) bool {
+		return !predicate(i)
+	})
 }
 
 // Keep returns a list of all members of the list that satisfy the predicate
