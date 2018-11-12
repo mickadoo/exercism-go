@@ -2,13 +2,12 @@
 package scrabble
 
 import (
-	"strings"
+	"unicode"
 )
 
 // Score computes the scrabble score for a word
 func Score(word string) int {
 	score := 0
-	word = strings.ToUpper(word)
 
 	for _, letter := range word {
 		score += getLetterScore(letter)
@@ -18,6 +17,8 @@ func Score(word string) int {
 }
 
 func getLetterScore(letter rune) int {
+	letter = unicode.ToUpper(letter)
+
 	switch letter {
 	case 'A':
 		return 1
@@ -73,5 +74,5 @@ func getLetterScore(letter rune) int {
 		return 10
 	}
 
-	panic("Unknown letter")
+	return 0
 }
