@@ -2,15 +2,16 @@
 package isogram
 
 import (
-	"strings"
+	"unicode"
 )
 
 // IsIsogram checks if a word is an isogram, i.e. it has no repeating letters. It only works for words with ascii characters
 func IsIsogram(word string) bool {
-	word = strings.ToLower(word)
 	var charactersFound int32
 
 	for _, letter := range word {
+		letter = unicode.ToLower(letter)
+
 		// get the numeric representation (0-25) by subtracting the lowest alphabetic character
 		flag := uint(letter - 'a')
 
