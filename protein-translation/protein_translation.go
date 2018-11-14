@@ -4,10 +4,10 @@ package protein
 import "errors"
 
 // STOP is the error when the end of an RNA string is reached prematurely
-var STOP error = errors.New("Reached stop")
+var STOP = errors.New("Reached stop")
 
 // ErrInvalidBase is used when an invalid 3 character base is encountered
-var ErrInvalidBase error = errors.New("Invalid base")
+var ErrInvalidBase = errors.New("Invalid base")
 
 // FromCodon takes a 3 character codon and returns its associated protein
 func FromCodon(codon string) (string, error) {
