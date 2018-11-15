@@ -10,7 +10,7 @@ func Detect(subject string, candidates []string) (result []string) {
 			result = append(result, candidate)
 		}
 	}
-	return result
+	return
 }
 
 func isAnagram(original string, anagram string) bool {
