@@ -24,11 +24,9 @@ func Nth(n int) (int, bool) {
 func getPrimes(c chan int) {
 	limit := 1000000
 	for i := 0; i < limit; i++ {
-		func(i int) {
-			if isPrime(i) {
-				c <- i
-			}
-		}(i)
+		if isPrime(i) {
+			c <- i
+		}
 	}
 }
 
