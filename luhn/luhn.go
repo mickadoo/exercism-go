@@ -1,10 +1,11 @@
 package luhn
 
 import (
-	"errors"
 	"strings"
 	"unicode"
 )
+
+// 203 ns/op
 
 // Valid checks if the given string is a valid Luhn number
 func Valid(input string) bool {
@@ -14,44 +15,29 @@ func Valid(input string) bool {
 		return false
 	}
 
-	numbers, err := getIntSlice(input)
-
-	if err != nil {
-		return false
+	flag := 1
+	if len(input)%2 == 0 {
+		flag = 0
 	}
 
-	change := false
-	for i := len(numbers) - 1; i >= 0; i-- {
-		if change == true {
-			numbers[i] = (numbers[i] * 2)
-			if numbers[i] > 9 {
-				numbers[i] -= 9
-			}
-			change = false
-		} else {
-			change = true
-		}
-	}
-
+	var digit int
 	sum := 0
-	for _, num := range numbers {
-		sum += num
-	}
-
-	return sum%10 == 0
-}
-
-func getIntSlice(input string) (result []int, err error) {
-	for _, char := range input {
+	for index, char := range input {
 		if unicode.IsDigit(char) {
-			result = append(result, int(char-'0'))
+			digit = int(char - '0')
+			if index%2 == flag {
+				digit *= 2
+				if digit > 9 {
+					digit -= 9
+				}
+			}
+			sum += digit
 		} else if unicode.IsSpace(char) {
 			continue
 		} else {
-			err = errors.New("Contains non digit character")
-			return
+			return false
 		}
 	}
 
-	return
+	return sum%10 == 0
 }
