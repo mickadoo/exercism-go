@@ -14,6 +14,7 @@ func Valid(input string) bool {
 		return false
 	}
 
+	// tracks if digit should be doubled based on input length
 	flag := 1
 	if len(input)%2 == 0 {
 		flag = 0
