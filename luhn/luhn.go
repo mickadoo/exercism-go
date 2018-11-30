@@ -2,7 +2,6 @@ package luhn
 
 import (
 	"strings"
-	"unicode"
 )
 
 // 203 ns/op
@@ -23,20 +22,19 @@ func Valid(input string) bool {
 	var digit int
 	sum := 0
 	for index, char := range input {
-		if unicode.IsDigit(char) {
-			digit = int(char - '0')
-			if index%2 == flag {
-				digit *= 2
-				if digit > 9 {
-					digit -= 9
-				}
-			}
-			sum += digit
-		} else if unicode.IsSpace(char) {
-			continue
-		} else {
+		digit = int(char - '0')
+
+		if digit > 9 || digit < 0 {
 			return false
 		}
+
+		if index%2 == flag {
+			digit *= 2
+			if digit > 9 {
+				digit -= 9
+			}
+		}
+		sum += digit
 	}
 
 	return sum%10 == 0
