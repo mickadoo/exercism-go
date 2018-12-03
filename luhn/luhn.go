@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-// 203 ns/op
-
 // Valid checks if the given string is a valid Luhn number
 func Valid(input string) bool {
 	input = strings.Replace(input, " ", "", -1)
