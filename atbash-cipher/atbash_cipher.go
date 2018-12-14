@@ -6,8 +6,6 @@ import (
 	"unicode"
 )
 
-// 4852 ns/op
-
 // Atbash encodes the input using the atbash cipher
 func Atbash(input string) string {
 	input = strings.ToLower(input)
