@@ -2,31 +2,27 @@ package atbash
 
 import (
 	"strings"
+	"unicode"
 )
 
+// 7315 ns/op
+
 // Atbash encodes the input using the atbash cipher
-func Atbash(input string) (ouput string) {
+func Atbash(input string) string {
 	input = strings.ToLower(input)
+	output := make([]rune, 0)
 	code := []rune{'z', 'y', 'x', 'w', 'v', 'u', 't', 's', 'r', 'q', 'p', 'o', 'n', 'm', 'l', 'k', 'j', 'i', 'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'}
-	spaceCount := 0
 	for _, char := range input {
 		index := char - 'a'
 		if index >= 0 && index <= 26 {
-			ouput += string(code[index])
-			if (len(ouput)-spaceCount)%5 == 0 {
-				ouput += " "
-				spaceCount++
-			}
+			output = append(output, code[index])
+		} else if unicode.IsNumber(char) {
+			output = append(output, char)
 		}
-		numIndex := char - '0'
-		if numIndex >= 0 && numIndex <= 9 {
-			ouput += string(char)
-			if (len(ouput)-spaceCount)%5 == 0 {
-				ouput += " "
-				spaceCount++
-			}
+		if (len(output))%6 == 5 {
+			output = append(output, ' ')
 		}
 	}
 
-	return strings.Trim(ouput, " ")
+	return strings.Trim(string(output), " ")
 }
