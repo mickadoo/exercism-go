@@ -3,7 +3,9 @@ package encode
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"strings"
+	"unicode"
 )
 
 func writeEncodedOutput(buffer *bytes.Buffer, char rune, count int) {
@@ -45,5 +47,30 @@ func RunLengthEncode(input string) string {
 
 // RunLengthDecode decodes the run-length-encoded input
 func RunLengthDecode(input string) string {
-	return ""
+	inputBuffer := strings.NewReader(input)
+	outputBuffer := bytes.Buffer{}
+	var currentCountStr string
+
+	for {
+		current, _, cErr := inputBuffer.ReadRune()
+		if cErr != nil {
+			break
+		}
+		if unicode.IsNumber(current) {
+			currentCountStr += string(current)
+			continue
+		} else {
+			if currentCountStr == "" {
+				outputBuffer.WriteRune(current)
+			} else {
+				currentCount, err := strconv.Atoi(currentCountStr)
+				if err == nil {
+					outputBuffer.WriteString(strings.Repeat(string(current), currentCount))
+					currentCountStr = ""
+				}
+			}
+		}
+	}
+
+	return outputBuffer.String()
 }
