@@ -56,6 +56,7 @@ func RunLengthDecode(input string) string {
 		if cErr != nil {
 			break
 		}
+
 		if unicode.IsNumber(current) {
 			currentCountStr += string(current)
 			continue
