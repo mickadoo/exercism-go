@@ -14,6 +14,6 @@ func Square(square int) (count uint64, err error) {
 }
 
 // Total returns the total of all grains of rice on the board
-func Total() (res uint64) {
-	return res - 1
+func Total() uint64 {
+	return 1<<64 - 1
 }
