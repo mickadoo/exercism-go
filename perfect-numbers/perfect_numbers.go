@@ -1,6 +1,9 @@
 package perfect
 
-import "errors"
+import (
+	"errors"
+	"math"
+)
 
 // Classification is a type of number
 type Classification int
@@ -25,33 +28,38 @@ func Classify(input int64) (class Classification, err error) {
 		return ClassificationDeficient, nil
 	}
 
-	total := getSumOfFactors(input)
-
-	switch {
-	case total == input:
-		class = ClassificationPerfect
-	case total > input:
-		class = ClassificationAbundant
-	case total < input:
-		class = ClassificationDeficient
-	}
-
-	return
+	return getSumOfFactors(input), nil
 }
 
-func getSumOfFactors(num int64) int64 {
+func getSumOfFactors(num int64) Classification {
 	total := int64(1)
-	// we're only looping up to the square root of num
-	for i := int64(2); i*i <= num; i++ {
-		if num%i == 0 {
-			total += i
+	sqrRoot := int64(math.Sqrt(float64(num)))
+	var otherFactor int64
+
+	// we only need to check as far as square root to get unique factors using this method
+	for factor := int64(2); factor <= sqrRoot; factor++ {
+		if num%factor == 0 {
+			total += factor
 			// since i is a factor, num/i is also a factor
 			// unless they're the same, e.g. 2*2 for 4)
-			if num/i != i {
-				total += num / i
+			otherFactor = num / factor
+			if otherFactor != factor {
+				total += otherFactor
 			}
+		}
+		if total > num {
+			return ClassificationAbundant
 		}
 	}
 
-	return total
+	switch {
+	case total == num:
+		return ClassificationPerfect
+	case total > num:
+		return ClassificationAbundant
+	case total < num:
+		return ClassificationDeficient
+	default:
+		panic("Should not be able to reach this point")
+	}
 }
