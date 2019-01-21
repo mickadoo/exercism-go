@@ -21,14 +21,11 @@ const (
 func Classify(input int64) (class Classification, err error) {
 	if input < 1 {
 		return class, ErrOnlyPositive
+	} else if input == 1 {
+		return ClassificationDeficient, nil
 	}
 
-	factors := findFactors(input)
-
-	var total int64
-	for _, factor := range factors {
-		total += factor
-	}
+	total := getSumOfFactors(input)
 
 	switch {
 	case total == input:
@@ -42,12 +39,19 @@ func Classify(input int64) (class Classification, err error) {
 	return
 }
 
-func findFactors(num int64) (factors []int64) {
-	for i := int64(1); i <= num/2; i++ {
+func getSumOfFactors(num int64) int64 {
+	total := int64(1)
+	// we're only looping up to the square root of num
+	for i := int64(2); i*i <= num; i++ {
 		if num%i == 0 {
-			factors = append(factors, i)
+			total += i
+			// since i is a factor, num/i is also a factor
+			// unless they're the same, e.g. 2*2 for 4)
+			if num/i != i {
+				total += num / i
+			}
 		}
 	}
 
-	return
+	return total
 }
