@@ -47,7 +47,9 @@ func getSumOfFactors(num int64) Classification {
 				total += otherFactor
 			}
 		}
+
 		if total > num {
+			// shortcut, if total already exceeds num we know the type
 			return ClassificationAbundant
 		}
 	}
